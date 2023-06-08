@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Relaciones, reflexividad, simetría, transitividad y antisimetría</title>
+		<style>
+			html, body {
+				width: 99%;
+				height: 99%;
+				text-align: center;
+			}
+			fieldset {
+				text-align: left;
+			}
+			/*.no-visible {
+				fill: white;
+			}
+			.visible {
+				fill: blue;
+			}*/
+			#contenedor {
+				padding: 0;
+				background-color: white;
+				display: block;
+				/*width: 90vw;
+				height: 90vh;
+				grid-template-columns: 1fr 1fr;
+				grid-template-rows: 1fr;*/
+				
+				/*border-color: black;
+				border-width: 1px;
+				border-style: solid;
+				width: 1000px;
+				height: 800px;*/
+			}
+			svg {
+				height: 60vh;
+			}
+			/*.internos {
+				display: block;
+				margin: auto;
+				background-color: white;
+				width: 90%;
+				height: 90%;
+			}
+			.contenedorBotones {
+				display: block;
+				text-align: center;
+				height: 80px;
+			}
+			.botones {
+				width: 40px;
+				height: 40px;
+				margin: 10px;
+			}*/
+		</style>
+	</head>
+	<body style="padding:0px;">
+		<div id="contenedor">
+		</div>
+		<script src="./listas.js"></script>
+		<script>
+			const contenedor = document.getElementById("contenedor");
+
+
+			function agregarGrafica() {
+				function generarRelacion() {
+					let matriz = [];
+					for(i=0; i<4; i++) {
+						let renglon = [];
+						for(j = 0; j < 4; j++) {
+							renglon.push(Math.floor(Math.random() * 2));
+						}
+						matriz.push(renglon);
+					}
+					return matriz;
+				}
+
+
+				function convertir(numero) {
+					let j = numero;
+					let resultado = [];
+					for (k = 0; k < 4; k++) {
+						let m = j % 16;
+						j = (j - m) / 16;
+						let resultado2 = [];
+						for(let l = 0; l < 4; l++) {
+							let n = m % 2;
+							resultado2.push(n);
+							m = (m - n) / 2;
+						}
+						resultado.push(resultado2);
+					}
+					return resultado;
+				}
+
+				function seleccionarRelacion() {
+					let numero = Math.floor(Math.random() * 17);
+					let numeroVS = Math.floor(Math.random() * elementosVS.length);
+					let numeroVT = Math.floor(Math.random() * elementosVT.length);
+					let numeroVA = Math.floor(Math.random() * elementosVA.length);
+					let numeroCero = Math.floor(Math.random() * elementosCero.length);
+					let numeroR = Math.floor(Math.random() * elementosR.length);
+					let numeroS = Math.floor(Math.random() * elementosS.length);
+					let numeroT = Math.floor(Math.random() * elementosT.length);
+					let numeroA = Math.floor(Math.random() * elementosA.length);
+					let numeroRS = Math.floor(Math.random() * elementosRS.length);
+					let numeroRT = Math.floor(Math.random() * elementosRT.length);
+					let numeroRA = Math.floor(Math.random() * elementosRA.length);
+					let numeroST = Math.floor(Math.random() * elementosST.length);
+					let numeroTA = Math.floor(Math.random() * elementosTA.length);
+					let numeroRST = Math.floor(Math.random() * elementosRST.length);
+					let numeroRTA = Math.floor(Math.random() * elementosRTA.length);
+					let numeroSTA = Math.floor(Math.random() * elementosSTA.length);
+					let numeroRSTA = Math.floor(Math.random() * elementosRSTA.length);
+
+					let arreglo;
+					switch (numero) {
+						case 0:
+							arreglo = convertir(elementosVS[numeroVS]);
+							break;
+						case 1:
+							arreglo = convertir(elementosVT[numeroVT]);
+							break;
+						case 2:
+							arreglo = convertir(elementosVA[numeroVA]);
+							break;
+						case 3:
+							arreglo = convertir(elementosR[numeroR]);
+							break;
+						case 4:
+							arreglo = convertir(elementosS[numeroS]);
+							break;
+						case 5:
+							arreglo = convertir(elementosT[numeroT]);
+							break;
+						case 6:
+							arreglo = convertir(elementosA[numeroA]);
+							break;
+						case 7:
+							arreglo = convertir(elementosRS[numeroRS]);
+							break;
+						case 8:
+							arreglo = convertir(elementosRT[numeroRT]);
+							break;
+						case 9:
+							arreglo = convertir(elementosRA[numeroRA]);
+							break;
+						case 10:
+							arreglo = convertir(elementosST[numeroST]);
+							break;
+						case 11:
+							arreglo = convertir(elementosTA[numeroTA]);
+							break;
+						case 12:
+							arreglo = convertir(elementosRST[numeroRST]);
+							break;
+						case 13:
+							arreglo = convertir(elementosRTA[numeroRTA]);
+							break;
+						case 14:
+							arreglo = convertir(elementosSTA[numeroSTA]);
+							break;
+						case 15:
+							arreglo = convertir(elementosRSTA[numeroRSTA]);
+							break;
+						case 16:
+							arreglo = convertir(elementosCero[numeroCero]);
+							break;
+					}
+					let texto = JSON.stringify(arreglo);
+					return texto;
+				}
+
+
+
+				var xmlns = "http://www.w3.org/2000/svg";
+				const subcontenedor = document.createElement("div"); //Crea contenedor general
+				contenedor.appendChild(subcontenedor);
+
+
+
+
+				const imagen = document.createElementNS(xmlns, "svg");	//Crea svg
+				subcontenedor.appendChild(imagen);
+				imagen.setAttributeNS(null,'viewBox', "0 0 500 500");
+				imagen.setAttribute("style", "background:white; padding:0px 0px 0px 0px;");
+
+				// Dibujar borde
+				const borde = document.createElementNS(xmlns, 'polyline'); // Crea borde del universo
+				imagen.appendChild(borde);
+				borde.setAttribute('points', '0,0 500,0 500,500 0,500 0,0 500,0');
+				borde.setAttribute("style", "stroke:black; stroke-width:5px; fill: white");
+
+				// Dibujar diagrama
+				const linea12 = document.createElementNS(xmlns, 'line');
+				function linea12Crear() {
+					imagen.appendChild(linea12);
+					linea12.setAttribute('x1', '150');
+					linea12.setAttribute('y1', '100');
+					linea12.setAttribute('x2', '350');
+					linea12.setAttribute('y2', '100');
+					linea12.setAttribute('stroke', 'black');
+					linea12.setAttribute('style', 'stroke-width: 5px');
+				}
+
+				const linea13 = document.createElementNS(xmlns, 'line');
+				function linea13Crear() {
+					imagen.appendChild(linea13);
+					linea13.setAttribute('x1', '135.355');
+					linea13.setAttribute('y1', '135.355');
+					linea13.setAttribute('x2', '364.645');
+					linea13.setAttribute('y2', '364.645');
+					linea13.setAttribute('stroke', 'black');
+					linea13.setAttribute('style', 'stroke-width: 5px');
+				}
+
+				const linea14 = document.createElementNS(xmlns, 'line');
+				function linea14Crear() {
+					imagen.appendChild(linea14);
+					linea14.setAttribute('x1', '100');
+					linea14.setAttribute('y1', '150');
+					linea14.setAttribute('x2', '100');
+					linea14.setAttribute('y2', '350');
+					linea14.setAttribute('stroke', 'black');
+					linea14.setAttribute('style', 'stroke-width: 5px');
+				}
+
+				const linea23 = document.createElementNS(xmlns, 'line');
+				function linea23Crear() {
+					imagen.appendChild(linea23);
+					linea23.setAttribute('x1', '400');
+					linea23.setAttribute('y1', '150');
+					linea23.setAttribute('x2', '400');
+					linea23.setAttribute('y2', '350');
+					linea23.setAttribute('stroke', 'black');
+					linea23.setAttribute('style', 'stroke-width: 5px');
+				}
+
+				const linea24 = document.createElementNS(xmlns, 'line');
+				function linea24Crear() {
+					imagen.appendChild(linea24);
+					linea24.setAttribute('x1', '364.645');
+					linea24.setAttribute('y1', '135.355');
+					linea24.setAttribute('x2', '135.355');
+					linea24.setAttribute('y2', '364.645');
+					linea24.setAttribute('stroke', 'black');
+					linea24.setAttribute('style', 'stroke-width: 5px');
+				}
+
+				const linea34 = document.createElementNS(xmlns, 'line');
+				function linea34Crear() {
+					imagen.appendChild(linea34);
+					linea34.setAttribute('x1', '150');
+					linea34.setAttribute('y1', '400');
+					linea34.setAttribute('x2', '350');
+					linea34.setAttribute('y2', '400');
+					linea34.setAttribute('stroke', 'black');
+					linea34.setAttribute('style', 'stroke-width: 5px');
+				}
+
+
+				const flecha12 = document.createElementNS(xmlns, 'polyline');
+				function flecha12Crear() {
+					imagen.appendChild(flecha12);
+					flecha12.setAttribute('points', '350,100 325,110 330,100 325,90 350,100');
+					flecha12.setAttribute('style', 'stroke-width:0px');
+					linea12.setAttribute('x2', '340')
+				}
+
+
+				const flecha13 = document.createElementNS(xmlns, 'polyline');
+				function flecha13Crear() {
+					imagen.appendChild(flecha13);
+					flecha13.setAttribute('points', '364.645,364.645 339.6,353.74 350.2,350.2 353.74,339.6 364.645,364.645');
+					flecha13.setAttribute('style', 'stroke-width:0px');
+					linea13.setAttribute('x2', '355')
+					linea13.setAttribute('y2', '355')
+				}
+
+				const flecha14 = document.createElementNS(xmlns, 'polyline');
+				function flecha14Crear() {
+					imagen.appendChild(flecha14);
+					flecha14.setAttribute('points', '100,350 110,325 100,330 90,325 100,350');
+					flecha14.setAttribute('style', 'stroke-width:0px');
+					linea14.setAttribute('y2', '340')
+				}
+
+				const flecha21 = document.createElementNS(xmlns, 'polyline');
+				function flecha21Crear() {
+					imagen.appendChild(flecha21);
+					flecha21.setAttribute('points', '150,100 175,110 170,100 175,90 150,100');
+					flecha21.setAttribute('style', 'stroke-width:0px');
+					linea12.setAttribute('x1', '160')
+				}
+
+				const flecha23 = document.createElementNS(xmlns, 'polyline');
+				function flecha23Crear() {
+					imagen.appendChild(flecha23);
+					flecha23.setAttribute('points', '400,350 410,325 400,330 390,325 400,350');
+					flecha23.setAttribute('style', 'stroke-width:0px');
+					linea23.setAttribute('y2', '340')
+				}
+
+				const flecha24 = document.createElementNS(xmlns, 'polyline');
+				function flecha24Crear() {
+					imagen.appendChild(flecha24);
+					flecha24.setAttribute('points', '135.355,364.645 160.4,353.74 149.8,350.2 146.26,339.6 135.355,364.645');
+					flecha24.setAttribute('style', 'stroke-width:0px');
+					linea24.setAttribute('x2', '145')
+					linea24.setAttribute('y2', '355')
+				}
+
+				const flecha31 = document.createElementNS(xmlns, 'polyline');
+				function flecha31Crear() {
+					imagen.appendChild(flecha31);
+					flecha31.setAttribute('points', '135.355,135.355 160.4,146.26 149.8,149.8 146.26,160.4 135.355,135.355');
+					flecha31.setAttribute('style', 'stroke-width:0px');
+					linea13.setAttribute('x1', '145')
+					linea13.setAttribute('y1', '145')
+				}
+
+				const flecha32 = document.createElementNS(xmlns, 'polyline');
+				function flecha32Crear() {
+					imagen.appendChild(flecha32);
+					flecha32.setAttribute('points', '400,150 410,175 400,170 390,175 400,150');
+					flecha32.setAttribute('style', 'stroke-width:0px');
+					linea23.setAttribute('y1', '160')
+				}
+
+				const flecha34 = document.createElementNS(xmlns, 'polyline');
+				function flecha34Crear() {
+					imagen.appendChild(flecha34);
+					flecha34.setAttribute('points', '150,400 175,410 170,400 175,390 150,400');
+					flecha34.setAttribute('style', 'stroke-width:0px');
+					linea34.setAttribute('x1', '160')
+				}
+
+				const flecha41 = document.createElementNS(xmlns, 'polyline');
+				function flecha41Crear() {
+					imagen.appendChild(flecha41);
+					flecha41.setAttribute('points', '100,150 110,175 100,170 90,175 100,150');
+					flecha41.setAttribute('style', 'stroke-width:0px');
+					linea14.setAttribute('y1', '160')
+				}
+
+				const flecha42 = document.createElementNS(xmlns, 'polyline');
+				function flecha42Crear() {
+					imagen.appendChild(flecha42);
+					flecha42.setAttribute('points', '364.645,135.355 339.6,146.26 350.2,149.8 353.74,160.4 364.645,135.355');
+					flecha42.setAttribute('style', 'stroke-width:0px');
+					linea24.setAttribute('x1', '355')
+					linea24.setAttribute('y1', '145')
+				}
+
+				const flecha43 = document.createElementNS(xmlns, 'polyline');
+				function flecha43Crear() {
+					imagen.appendChild(flecha43);
+					flecha43.setAttribute('points', '350,400 325,410 330,400 325,390 350,400');
+					flecha43.setAttribute('style', 'stroke-width:0px');
+					linea34.setAttribute('x2', '340')
+				}
+
+				const elemento1 = document.createElementNS(xmlns, 'circle');
+				imagen.appendChild(elemento1);
+				elemento1.setAttribute('cx', '100');
+				elemento1.setAttribute('cy', '100');
+				elemento1.setAttribute('r', '40');
+				elemento1.setAttribute("style", "fill: white; stroke: black; stroke-width: 5px");
+				const elemento2 = document.createElementNS(xmlns, 'circle');
+				imagen.appendChild(elemento2);
+				elemento2.setAttribute('cx', '400');
+				elemento2.setAttribute('cy', '100');
+				elemento2.setAttribute('r', '40');
+				elemento2.setAttribute("style", "fill: white; stroke: black; stroke-width: 5px");
+				const elemento3 = document.createElementNS(xmlns, 'circle');
+				imagen.appendChild(elemento3);
+				elemento3.setAttribute('cx', '400');
+				elemento3.setAttribute('cy', '400');
+				elemento3.setAttribute('r', '40');
+				elemento3.setAttribute("style", "fill: white; stroke: black; stroke-width: 5px");
+				const elemento4 = document.createElementNS(xmlns, 'circle');
+				imagen.appendChild(elemento4);
+				elemento4.setAttribute('cx', '100');
+				elemento4.setAttribute('cy', '400');
+				elemento4.setAttribute('r', '40');
+				elemento4.setAttribute("style", "fill: white; stroke: black; stroke-width: 5px");
+
+				// --------------------------------------------------
+
+				const formulario = document.createElement("fieldset");
+				subcontenedor.appendChild(formulario);
+				const formularioTitulo = document.createElement("legend");
+				formulario.appendChild(formularioTitulo);
+				formularioTitulo.innerHTML = 'Respuestas';
+
+				const formularioReflexiva = document.createElement("div");
+				formulario.appendChild(formularioReflexiva);
+				const checkReflexiva = document.createElement("input");
+				formularioReflexiva.appendChild(checkReflexiva);
+				checkReflexiva.setAttribute('type','checkbox');
+				checkReflexiva.setAttribute('name','respuestaReflexiva');
+				const labelReflexiva = document.createElement("label");
+				formularioReflexiva.appendChild(labelReflexiva);
+				labelReflexiva.setAttribute('for', 'respuestaReflexiva');
+				labelReflexiva.innerHTML = 'Reflexiva';
+
+				const formularioSimetrica = document.createElement("div");
+				formulario.appendChild(formularioSimetrica);
+				const checkSimetrica = document.createElement("input");
+				formularioSimetrica.appendChild(checkSimetrica);
+				checkSimetrica.setAttribute('type','checkbox');
+				checkSimetrica.setAttribute('name','respuestaSimetrica');
+				const labelSimetrica = document.createElement("label");
+				formularioSimetrica.appendChild(labelSimetrica);
+				labelSimetrica.setAttribute('for', 'respuestaSimetrica');
+				labelSimetrica.innerHTML = 'Simétrica';
+
+				const formularioTransitiva = document.createElement("div");
+				formulario.appendChild(formularioTransitiva);
+				const checkTransitiva = document.createElement("input");
+				formularioTransitiva.appendChild(checkTransitiva);
+				checkTransitiva.setAttribute('type','checkbox');
+				checkTransitiva.setAttribute('name','respuestaTransitiva');
+				const labelTransitiva = document.createElement("label");
+				formularioTransitiva.appendChild(labelTransitiva);
+				labelTransitiva.setAttribute('for', 'respuestaTransitiva');
+				labelTransitiva.innerHTML = 'Transitiva';
+
+				const formularioAntisimetrica = document.createElement("div");
+				formulario.appendChild(formularioAntisimetrica);
+				const checkAntisimetrica = document.createElement("input");
+				formularioAntisimetrica.appendChild(checkAntisimetrica);
+				checkAntisimetrica.setAttribute('type','checkbox');
+				checkAntisimetrica.setAttribute('name','respuestaAntisimetrica');
+				const labelAntisimetrica = document.createElement("label");
+				formularioAntisimetrica.appendChild(labelAntisimetrica);
+				labelAntisimetrica.setAttribute('for', 'respuestaAntisimetrica');
+				labelAntisimetrica.innerHTML = 'Antisimétrica';
+
+				const formularioCalificar = document.createElement("div");
+				formulario.appendChild(formularioCalificar);
+				const botonCalificar = document.createElement("button");
+				formulario.appendChild(botonCalificar);
+				botonCalificar.innerText = 'Calificar';
+				botonCalificar.addEventListener('click', apretarBoton);
+
+				let winWidth = window.innerWidth;
+				let winHeight = window.innweHeight;
+
+
+				addEventListener("resize", (event) => { 
+					winWidth = window.innerWidth;
+					winHeight = window.innerHeight;
+					if (winWidth > winHeight - 100) {
+						imagen.style.maxHeight = winHeight * 0.7 + 'px';
+					} else {
+						imagen.style.maxHeight = winWidth * 0.9 + 'px';
+					}
+					}
+				);
+	
+
+
+
+
+
+				function apretarBoton() {
+					let botonR = checkReflexiva.checked;
+					let botonS = checkSimetrica.checked;
+					let botonT = checkTransitiva.checked;
+					let botonA = checkAntisimetrica.checked;
+					let esR = reflexiva(relacion);
+					let esS = simetrica(relacion);
+					let esT = transitiva(relacion);
+					let esA = antisimetrica(relacion);
+
+					texto = '';
+					if(esR) { texto += 'Es ' } else { texto += 'No es ' };
+					texto += 'reflexiva ';
+					if(esR == botonR) { texto += '✅\n' } else { texto += '❌\n' };
+					if(esS) { texto += 'Es ' } else { texto += 'No es ' };
+					texto += 'simétrica ';
+					if(esS == botonS) { texto += '✅\n' } else { texto += '❌\n' };
+					if(esT) { texto += 'Es ' } else { texto += 'No es ' };
+					texto += 'transitiva ';
+					if(esT == botonT) { texto += '✅\n' } else { texto += '❌\n' };
+					if(esA) { texto += 'Es ' } else { texto += 'No es ' };
+					texto += 'antisimétrica ';
+					if(esA == botonA) { texto += '✅\n' } else { texto += '❌\n' };
+					alert(texto);
+
+				}
+
+
+				// --------------------------------------------------
+
+				const relacion = JSON.parse(seleccionarRelacion());
+
+
+				if(relacion[0][0] == 1) {
+					elemento1.setAttribute("style", "fill: black");
+				}
+				if(relacion[1][1] == 1) {
+					elemento2.setAttribute("style", "fill: black");
+				}
+				if(relacion[2][2] == 1) {
+					elemento3.setAttribute("style", "fill: black");
+				}
+				if(relacion[3][3] == 1) {
+					elemento4.setAttribute("style", "fill: black");
+				}
+
+				if(relacion[0][1] == 1) {
+					linea12Crear();
+					flecha12Crear();
+				}
+				if(relacion[0][2] == 1) {
+					linea13Crear();
+					flecha13Crear();
+				}
+				if(relacion[0][3] == 1) {
+					linea14Crear();
+					flecha14Crear();
+				}
+
+				if(relacion[1][0] == 1) {
+					if(relacion[0][1] == 0) {
+						linea12Crear();
+					}
+					flecha21Crear();
+				}
+				if(relacion[1][2] == 1) {
+					linea23Crear();
+					flecha23Crear();
+				}
+				if(relacion[1][3] == 1) {
+					linea24Crear();
+					flecha24Crear();
+				}
+
+				if(relacion[2][0] == 1) {
+					if(relacion[0][2] == 0) {
+						linea13Crear();
+					}
+					flecha31Crear();
+				}
+				if(relacion[2][1] == 1) {
+					if(relacion[1][2] == 0) {
+						linea23Crear();
+					}
+					flecha32Crear();
+				}
+				if(relacion[2][3] == 1) {
+					linea34Crear();
+					flecha34Crear();
+				}
+
+				if(relacion[3][0] == 1) {
+					if(relacion[0][3] == 0) {
+						linea14Crear();
+					}
+					flecha41Crear();
+				}
+				if(relacion[3][1] == 1) {
+					if(relacion[1][3] == 0) {
+						linea24Crear();
+					}
+					flecha42Crear();
+				}
+				if(relacion[3][2] == 1) {
+					if(relacion[2][3] == 0) {
+						linea34Crear();
+					}
+					flecha43Crear();
+				}
+
+
+				// -------------------------------------
+
+				function reflexiva(matriz) {
+					respuesta = true;
+					for(i = 0; i < 4; i++) {
+						if(matriz[i][i] == 0) {
+							respuesta = false;
+						}
+					}
+					return respuesta;
+				}
+
+				function simetrica(matriz) {
+					respuesta = true;
+					for(i = 0; i < 4; i++) {
+						for(j = 0; j < 4; j++) {
+							if(matriz[i][j] != matriz[j][i]) {
+								respuesta = false;
+							}
+						}
+					}
+					return respuesta;
+				}
+
+				function transitiva(matriz) {
+					respuesta = true;
+					for(i = 0; i < 4; i++) {
+						for(j = 0; j < 4; j++) {
+							for(k = 0; k < 4; k++) {
+								if(matriz[i][j] == 1 && matriz[j][k] == 1) {
+									if(matriz[i][k] == 0) {
+										respuesta = false;
+									}
+								}
+							}
+						}
+					}
+					return respuesta;
+				}
+
+				function antisimetrica(matriz) {
+					respuesta = true;
+						for(i = 0; i < 4; i++) {
+							for(j = 0; j < 4; j++) {
+								if(matriz[i][j] == 1 && matriz[j][i] == 1) {
+									if(i != j) {
+										respuesta = false;
+									}
+								}
+							}
+						}
+					return respuesta;
+				}
+
+
+			}
+
+
+
+
+
+
+			agregarGrafica();
+
+		</script>
+	</body>
+</html>
+
